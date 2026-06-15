@@ -164,10 +164,21 @@ h1,h2,h3,h4{line-height:1.08;font-weight:600}
 
 /* identifica */
 .signs{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-.sign{padding:30px 24px;min-height:170px;display:flex;flex-direction:column;justify-content:flex-end}
+.sign{padding:30px 24px;min-height:178px;display:flex;flex-direction:column;justify-content:flex-end;text-align:left;font-family:inherit;color:inherit;cursor:pointer;border:1px solid var(--card-bd)}
 .sign h3{font-size:1.15rem;margin-bottom:8px}
 .sign p{font-size:.9rem;color:var(--muted)}
-.sign::before{content:"";position:absolute;top:22px;left:24px;width:34px;height:34px;border-radius:10px;background:var(--grad-soft);border:1px solid var(--card-bd)}
+.sign__check{position:absolute;top:20px;left:22px;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--grad-soft);border:1px solid var(--card-bd);color:transparent;font-weight:800;font-size:1rem;transition:.2s;z-index:2}
+.sign[aria-pressed="true"]{border-color:#ff8fc7aa;box-shadow:0 0 0 1px #ff8fc755,0 26px 60px -34px #d6409f}
+.sign[aria-pressed="true"] .sign__check{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -8px #d6409f;transform:scale(1.05)}
+
+/* medidor de sinais */
+.signs-result{margin-top:22px;padding:26px 30px;border-radius:var(--radius);background:var(--card);border:1px solid var(--card-bd);backdrop-filter:blur(12px)}
+.signs-meter{height:10px;border-radius:999px;background:#ffffff14;overflow:hidden;margin-bottom:18px}
+.signs-meter span{display:block;height:100%;width:0;background:var(--grad);transition:width .5s cubic-bezier(.2,.7,.2,1);box-shadow:0 0 14px #d6409f}
+.signs-result__count{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.signs-result__count b{color:var(--rose);font-size:1rem}
+.signs-result h3{font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,3vw,2rem);margin:6px 0 8px}
+.signs-result__actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
 
 /* sobre */
 .section--split{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(36px,6vw,72px);align-items:center;max-width:var(--maxw)}
@@ -266,7 +277,7 @@ select option{background:#160c25;color:var(--ink)}
 .ig-card small{font-weight:400;color:var(--rose);font-size:.8rem;margin-top:2px}
 
 /* ============ FOOTER ============ */
-.footer{border-top:1px solid var(--card-bd);margin-top:40px;padding:60px clamp(16px,4vw,40px) 26px;background:linear-gradient(180deg,transparent,#0703 0e)}
+.footer{border-top:1px solid var(--card-bd);margin-top:40px;padding:60px clamp(16px,4vw,40px) 26px;background:linear-gradient(180deg,transparent,rgba(0,0,0,.22))}
 .footer__top{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr;gap:40px;padding-bottom:36px;border-bottom:1px solid var(--card-bd)}
 .footer__logo{width:120px;padding:12px;border-radius:14px;background:#fbf6efd9;margin-bottom:16px}
 .footer__top p{max-width:30ch}
@@ -325,3 +336,59 @@ select option{background:#160c25;color:var(--ink)}
   .portrait-chip{font-size:.72rem}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+
+/* ============ THEME TOGGLE ============ */
+.theme-toggle{width:42px;height:42px;border-radius:12px;border:1px solid var(--card-bd);background:var(--card);color:var(--ink);cursor:pointer;font-size:1.05rem;display:grid;place-items:center;transition:transform .2s,border-color .2s,background .3s;backdrop-filter:blur(8px)}
+.theme-toggle:hover{border-color:var(--rose);transform:translateY(-2px)}
+.theme-toggle__ico{line-height:1}
+
+/* ============ LIGHT THEME ============ */
+:root[data-theme="light"]{
+  --bg:#f4f0fb;
+  --bg-2:#ece5f6;
+  --ink:#251a35;
+  --muted:#6c6080;
+  --rose:#c2348f;
+  --card:rgba(40,20,70,.04);
+  --card-bd:rgba(40,20,70,.14);
+  --grad-soft:linear-gradient(120deg,#5b8def22,#8b5cf622,#d6409f22);
+  --shadow:0 30px 80px -34px rgba(120,40,180,.28);
+}
+[data-theme="light"] body::before{
+  background:
+    radial-gradient(48vw 48vw at 12% 8%, #5b8def1f, transparent 60%),
+    radial-gradient(42vw 42vw at 92% 22%, #d6409f22, transparent 60%),
+    radial-gradient(50vw 50vw at 78% 96%, #8b5cf61f, transparent 62%),
+    var(--bg);
+}
+[data-theme="light"] .spotlight{
+  background:radial-gradient(360px circle at var(--mx,50%) var(--my,50%),
+    transparent 0%, rgba(90,60,140,0) 26%, rgba(70,45,120,.07) 62%, rgba(55,35,100,.13) 100%);
+}
+[data-theme="light"] .grain{opacity:.03;mix-blend-mode:multiply}
+[data-theme="light"] .nav.scrolled{background:rgba(244,240,251,.82)}
+[data-theme="light"] .nav__links.open{background:rgba(244,240,251,.97)}
+[data-theme="light"] .hero__veil{background:linear-gradient(180deg,rgba(244,240,251,.55),rgba(244,240,251,.86)),radial-gradient(60vw 60vw at 80% 30%,transparent,rgba(244,240,251,.7))}
+[data-theme="light"] .hero__video{opacity:.5}
+[data-theme="light"] input,[data-theme="light"] select,[data-theme="light"] .seg button,
+[data-theme="light"] .calendar,[data-theme="light"] .calendar__head button,
+[data-theme="light"] .cal-day,[data-theme="light"] .slot{background:rgba(40,20,70,.045)}
+[data-theme="light"] .quiz__bar,[data-theme="light"] .signs-meter{background:rgba(40,20,70,.10)}
+[data-theme="light"] input::placeholder{color:#9387a8}
+[data-theme="light"] select option{background:#fff;color:var(--ink)}
+[data-theme="light"] .cal-day:hover:not(:disabled){background:#d6409f22}
+[data-theme="light"] .portrait-card{background:#fff}
+[data-theme="light"] .portrait-badge{background:rgba(244,240,251,.75);color:var(--ink)}
+[data-theme="light"] .portrait-chip{background:rgba(255,255,255,.85);color:var(--ink)}
+[data-theme="light"] .kairos-mark{background:rgba(244,240,251,.82)}
+[data-theme="light"] .kairos-mark img,[data-theme="light"] .footer__credit img{filter:none}
+[data-theme="light"] .wm-logos{mix-blend-mode:multiply;opacity:.06}
+[data-theme="light"] .wm-text{filter:invert(1);opacity:.06}
+[data-theme="light"] .service__ico img{filter:none;opacity:.9}
+/* a seção escura permanece escura mesmo no modo claro */
+[data-theme="light"] .section--dark{
+  --ink:#f4eefb;--muted:#b3a6c9;--rose:#ff8fc7;
+  --card:rgba(255,255,255,.05);--card-bd:rgba(255,255,255,.12);
+}
+[data-theme="light"] .section--dark .quiz__opt{background:rgba(255,255,255,.05)}
+[data-theme="light"] .footer{background:linear-gradient(180deg,transparent,rgba(40,20,70,.05))}

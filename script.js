@@ -30,6 +30,24 @@
   /* ---------- year ---------- */
   $('#yr').textContent = '2026';
 
+  /* ---------- tema claro / escuro ---------- */
+  const themeBtn = $('#themeToggle'), themeIco = $('#themeIco');
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    if (themeIco) themeIco.textContent = t === 'light' ? '☀️' : '🌙';
+    if (themeBtn) themeBtn.title = t === 'light' ? 'Mudar para modo escuro' : 'Mudar para modo claro';
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', t === 'light' ? '#f4f0fb' : '#0b0613');
+  }
+  let theme = 'dark';
+  try { theme = localStorage.getItem('kl-theme') || 'dark'; } catch (e) {}
+  applyTheme(theme);
+  themeBtn && themeBtn.addEventListener('click', () => {
+    theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    applyTheme(theme);
+    try { localStorage.setItem('kl-theme', theme); } catch (e) {}
+  });
+
   /* ---------- spotlight + glow tracking ---------- */
   const spot = $('#spotlight');
   const glowCards = () => $$('.glow-card, [data-tilt]');
@@ -123,6 +141,39 @@
   }
   mark.addEventListener('click', toggleAudio);
   credit.addEventListener('click', e => { e.preventDefault(); toggleAudio(); });
+
+  /* =========================================================
+     SINAIS — autoavaliação clicável + medidor
+     ========================================================= */
+  const signBtns = $$('.sign');
+  const meterFill = $('#signsMeterFill'), signsCount = $('#signsCount'),
+        signsLevel = $('#signsLevel'), signsMsg = $('#signsMsg'), signsActions = $('#signsActions');
+  const LEVELS = [
+    { lvl: 'Toque nos cartões acima',
+      msg: 'Selecione os sinais que fazem sentido para você e eu te mostro o próximo passo.' },
+    { lvl: 'Sinais leves ✦',
+      msg: 'Você reconheceu 1 sinal. Pode ser sutil — mas se cuidar agora evita que ele cresça. Que tal uma conversa de acolhimento?' },
+    { lvl: 'Atenção moderada ✦✦',
+      msg: 'Dois sinais marcados. Eles costumam se reforçar entre si. Uma análise gratuita já te ajuda a enxergar com clareza.' },
+    { lvl: 'Vale buscar apoio ✦✦✦',
+      msg: 'Três sinais é um recado importante do seu emocional. Você não precisa lidar com isso sozinha — vamos conversar?' },
+    { lvl: 'Hora de cuidar de você 💜',
+      msg: 'Você se identificou com todos os sinais. Isso pede um cuidado de verdade, com método e acolhimento. Dê o primeiro passo hoje.' },
+  ];
+  function updateSigns() {
+    const n = signBtns.filter(b => b.getAttribute('aria-pressed') === 'true').length;
+    if (meterFill) meterFill.style.width = (n / 4 * 100) + '%';
+    if (signsCount) signsCount.textContent = n;
+    const L = LEVELS[n];
+    if (signsLevel) signsLevel.textContent = L.lvl;
+    if (signsMsg) signsMsg.textContent = L.msg;
+    if (signsActions) signsActions.hidden = n === 0;
+  }
+  signBtns.forEach(b => b.addEventListener('click', () => {
+    b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+    updateSigns();
+  }));
+  updateSigns();
 
   /* =========================================================
      ANÁLISE GRATUITA — quiz

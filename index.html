@@ -43,6 +43,9 @@
     <a href="#agenda">Agendar</a>
   </nav>
   <a href="#analise" class="btn btn--ghost nav__cta">Análise gratuita</a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Alternar modo claro e escuro" title="Modo claro / escuro">
+    <span class="theme-toggle__ico" id="themeIco">🌙</span>
+  </button>
   <button class="nav__burger" id="burger" aria-label="Menu">☰</button>
 </header>
 
@@ -92,13 +95,38 @@
   <div class="section__head reveal">
     <span class="kicker">Você se identifica?</span>
     <h2 class="h2">Alguns sinais de que <span class="grad-text">é hora de cuidar de você</span></h2>
-    <p class="muted">Passe o mouse pelos cartões. Se você reconhece em si, a terapia pode ser o seu próximo passo.</p>
+    <p class="muted">Toque nos cartões com os quais você se identifica. O medidor mostra, na hora, o quanto buscar apoio pode te ajudar agora.</p>
   </div>
   <div class="signs reveal">
-    <article class="sign glow-card" data-tilt><h3>Autocrítica excessiva</h3><p>A voz que nunca acha que você foi boa o bastante.</p></article>
-    <article class="sign glow-card" data-tilt><h3>Medo do julgamento</h3><p>Decidir pela aprovação dos outros e esquecer de você.</p></article>
-    <article class="sign glow-card" data-tilt><h3>Dificuldade com limites</h3><p>Dizer "sim" quando o seu corpo inteiro pede "não".</p></article>
-    <article class="sign glow-card" data-tilt><h3>Sentir-se invisível</h3><p>Estar na relação e, ainda assim, sentir-se sozinha.</p></article>
+    <button type="button" class="sign glow-card" data-sign="autocritica" aria-pressed="false">
+      <span class="sign__check" aria-hidden="true">✓</span>
+      <h3>Autocrítica excessiva</h3><p>A voz que nunca acha que você foi boa o bastante.</p>
+    </button>
+    <button type="button" class="sign glow-card" data-sign="julgamento" aria-pressed="false">
+      <span class="sign__check" aria-hidden="true">✓</span>
+      <h3>Medo do julgamento</h3><p>Decidir pela aprovação dos outros e esquecer de você.</p>
+    </button>
+    <button type="button" class="sign glow-card" data-sign="limites" aria-pressed="false">
+      <span class="sign__check" aria-hidden="true">✓</span>
+      <h3>Dificuldade com limites</h3><p>Dizer "sim" quando o seu corpo inteiro pede "não".</p>
+    </button>
+    <button type="button" class="sign glow-card" data-sign="invisivel" aria-pressed="false">
+      <span class="sign__check" aria-hidden="true">✓</span>
+      <h3>Sentir-se invisível</h3><p>Estar na relação e, ainda assim, sentir-se sozinha.</p>
+    </button>
+  </div>
+
+  <div class="signs-result reveal" id="signsResult" aria-live="polite">
+    <div class="signs-meter"><span id="signsMeterFill"></span></div>
+    <div class="signs-result__body">
+      <span class="signs-result__count"><b id="signsCount">0</b> de 4 sinais marcados</span>
+      <h3 id="signsLevel">Toque nos cartões acima</h3>
+      <p class="muted" id="signsMsg">Selecione os sinais que fazem sentido para você e eu te mostro o próximo passo.</p>
+      <div class="signs-result__actions" id="signsActions" hidden>
+        <a href="#analise" class="btn btn--solid">Fazer análise gratuita →</a>
+        <a href="#agenda" class="btn btn--glass">Agendar conversa</a>
+      </div>
+    </div>
   </div>
 </section>
 
