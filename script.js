@@ -81,6 +81,50 @@
   }
   $$('.glow-card, [data-tilt], .tilt').forEach(bindTilt);
 
+  /* ---------- cursor orb (efeito de água) ---------- */
+  (function cursorOrb() {
+    if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+    const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+    document.documentElement.classList.add('has-orb');
+    const orb = document.createElement('div'); orb.className = 'cursor-orb';
+    const dot = document.createElement('div'); dot.className = 'cursor-dot';
+    document.body.append(orb, dot);
+    const HOT = 'a,button,input,select,textarea,label,.swatch,[role="button"],.quiz__opt,.slot,.cal-day,.sign';
+    let tx = innerWidth / 2, ty = innerHeight / 2, ox = tx, oy = ty, lx = tx, ly = ty, lastDrip = 0;
+
+    addEventListener('pointermove', e => {
+      tx = e.clientX; ty = e.clientY;
+      dot.style.transform = `translate(${tx}px,${ty}px) translate(-50%,-50%)`;
+      orb.classList.toggle('hot', !!(e.target.closest && e.target.closest(HOT)));
+      if (!reduce) {
+        const d = Math.hypot(tx - lx, ty - ly);
+        if (d > 24 && e.timeStamp - lastDrip > 40) { drip(tx + (Math.random() * 10 - 5), ty + 6); lastDrip = e.timeStamp; lx = tx; ly = ty; }
+      }
+    }, { passive: true });
+    addEventListener('pointerdown', e => {
+      orb.classList.add('down'); ripple(e.clientX, e.clientY);
+      if (!reduce) for (let i = 0; i < 5; i++) drip(e.clientX + (Math.random() * 30 - 15), e.clientY + Math.random() * 8);
+    });
+    addEventListener('pointerup', () => orb.classList.remove('down'));
+    document.addEventListener('mouseleave', () => { orb.style.opacity = '0'; dot.style.opacity = '0'; });
+    document.addEventListener('mouseenter', () => { orb.style.opacity = ''; dot.style.opacity = ''; });
+
+    function ripple(x, y) {
+      [0, 1].forEach(i => {
+        const r = document.createElement('div'); r.className = 'ripple' + (i ? ' r2' : '');
+        r.style.left = x + 'px'; r.style.top = y + 'px';
+        document.body.appendChild(r); setTimeout(() => r.remove(), 1000);
+      });
+    }
+    function drip(x, y) {
+      const s = 4 + Math.random() * 7, d = document.createElement('div');
+      d.className = 'droplet';
+      d.style.cssText = `left:${x}px;top:${y}px;width:${s}px;height:${s}px;--dy:${22 + Math.random() * 26}px;--dl:${.9 + Math.random() * .6}s`;
+      document.body.appendChild(d); setTimeout(() => d.remove(), 1700);
+    }
+    (function tick() { ox += (tx - ox) * .18; oy += (ty - oy) * .18; orb.style.transform = `translate(${ox}px,${oy}px) translate(-50%,-50%)`; requestAnimationFrame(tick); })();
+  })();
+
   /* ---------- nav scroll / progress / burger ---------- */
   const nav = $('#nav'), prog = $('#scrollProgress');
   addEventListener('scroll', () => {
