@@ -4,6 +4,25 @@
    ============================================================ */
 (() => {
   'use strict';
+
+  /* ============================================================
+     TRAVA DE DEMONSTRAÇÃO (kill switch)
+     Mude para true e faça push para BLOQUEAR o site inteiro.
+     (Para takedown total e instantâneo, delete o projeto na Vercel.)
+     ============================================================ */
+  const DEMO_LOCKED = false;
+  if (DEMO_LOCKED) {
+    document.documentElement.innerHTML =
+      `<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#0b0613;color:#f4eefb;font-family:system-ui,sans-serif;text-align:center;padding:24px">
+        <div>
+          <div style="font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:#ff8fc7">Kairos Digital</div>
+          <h1 style="font-weight:600;margin:14px 0;font-size:clamp(1.4rem,5vw,2.2rem)">Demonstração encerrada</h1>
+          <p style="color:#b3a6c9;max-width:32ch;margin:0 auto">Esta apresentação não está mais disponível.</p>
+        </div>
+      </body>`;
+    return;
+  }
+
   const WHATS = '5562984004697';
   const $  = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
