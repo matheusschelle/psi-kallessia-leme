@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Kalléssia Leme · Psicóloga de Mulheres — CRP 09/15380</title>
 <meta name="description" content="Psicologia para mulheres em relações desequilibradas. Resgate de autoestima, limites e reconexão. Faça uma análise gratuita e agende seu acolhimento com a psicóloga Kalléssia Leme — CRP 09/15380." />
-<meta name="theme-color" content="#f6f0e6" />
+<meta name="theme-color" content="#fdfbf7" />
 <meta property="og:title" content="Kalléssia Leme · Psicóloga de Mulheres" />
 <meta property="og:description" content="Amor-próprio não é luxo, é sobrevivência. Análise gratuita e agendamento online." />
 <meta property="og:image" content="assets/img/hero-portrait.jpg" />
@@ -314,13 +314,56 @@
     </div>
   </div>
   <div class="footer__bottom">
-    <span>© <span id="yr"></span> Kalléssia Leme · Psicóloga. Todos os direitos reservados.</span>
+    <span>© <span id="yr"></span> Kalléssia Leme · Psicóloga. Todos os direitos reservados. · <a href="#admin" class="footer__admin" id="adminOpen">Administrador</a></span>
     <a href="#hero" class="footer__credit" id="kairosCredit" title="Clique para ativar o som ambiente">
       <img src="assets/img/kairos-logo.png" alt="Kairos Digital" />
       <span>desenvolvido por <b>Kairos Digital</b></span>
     </a>
   </div>
 </footer>
+
+<!-- PAINEL DO ADMINISTRADOR -->
+<div class="admin" id="admin" hidden>
+  <div class="admin__panel glow-card glow-card--lg">
+    <button class="admin__close" id="adminClose" aria-label="Fechar">✕</button>
+
+    <!-- login -->
+    <div id="adminLogin">
+      <span class="admin__kicker">Área restrita</span>
+      <h2 class="admin__title">Painel do administrador</h2>
+      <p class="admin__sub">Entre para personalizar as cores do site.</p>
+      <div class="field"><label>Usuário</label><input type="text" id="adminUser" autocomplete="username" placeholder="usuário" /></div>
+      <div class="field"><label>Senha</label><input type="password" id="adminPass" autocomplete="current-password" placeholder="senha" /></div>
+      <p class="admin__err" id="adminErr" hidden>Usuário ou senha incorretos.</p>
+      <button class="btn btn--solid btn--block" id="adminEnter">Entrar</button>
+    </div>
+
+    <!-- controles -->
+    <div id="adminPanel" hidden>
+      <span class="admin__kicker">Personalização</span>
+      <h2 class="admin__title">Cores do site</h2>
+
+      <div class="admin__group">
+        <label>🎨 Cor do fundo</label>
+        <div class="swatches" id="bgSwatches"></div>
+        <label class="admin__custom"><input type="color" id="bgCustom" value="#fdfbf7" /><span>Cor personalizada</span></label>
+      </div>
+
+      <div class="admin__group">
+        <label>✦ Cor dos efeitos <small>(botões, brilhos, destaques)</small></label>
+        <div class="swatches" id="fxSwatches"></div>
+        <label class="admin__custom"><input type="color" id="fxCustom" value="#b08658" /><span>Cor personalizada</span></label>
+      </div>
+
+      <div class="admin__actions">
+        <button class="btn btn--glass" id="adminReset">Restaurar padrão</button>
+        <button class="btn btn--solid" id="adminSave">Salvar alterações</button>
+      </div>
+      <p class="admin__note" id="adminNote">As alterações são aplicadas ao vivo e ficam salvas neste dispositivo.</p>
+      <button class="admin__logout" id="adminLogout">Sair do painel</button>
+    </div>
+  </div>
+</div>
 
 <!-- KAIROS WATERMARK / AUDIO TOGGLE -->
 <button class="kairos-mark" id="kairosMark" title="Som ambiente — Kairos Digital" aria-label="Ativar som ambiente">

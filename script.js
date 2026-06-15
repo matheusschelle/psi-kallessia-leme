@@ -37,7 +37,7 @@
     if (themeIco) themeIco.textContent = t === 'light' ? '☀️' : '🌙';
     if (themeBtn) themeBtn.title = t === 'light' ? 'Mudar para modo escuro' : 'Mudar para modo claro';
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', t === 'light' ? '#f6f0e6' : '#181210');
+    if (meta) meta.setAttribute('content', t === 'light' ? '#fdfbf7' : '#181210');
   }
   let theme = 'light';
   try { theme = localStorage.getItem('kl-theme') || 'light'; } catch (e) {}
@@ -381,4 +381,113 @@
 Pode confirmar para mim, por favor?`;
     window.open(`https://wa.me/${WHATS}?text=${encodeURIComponent(msg)}`, '_blank');
   });
+
+  /* =========================================================
+     PAINEL DO ADMINISTRADOR — personalização de cores
+     ========================================================= */
+  (function adminPanel() {
+    const USER = 'admin', PASS = 'kairos2026';   // credenciais (podem ser trocadas)
+    const panel = $('#admin');
+    if (!panel) return;
+    const loginView = $('#adminLogin'), ctrlView = $('#adminPanel');
+
+    /* helpers de cor */
+    const clamp = v => Math.max(0, Math.min(255, Math.round(v)));
+    function hexToRgb(h) { h = h.replace('#', ''); if (h.length === 3) h = h.split('').map(c => c + c).join(''); const n = parseInt(h, 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+    const rgbStr = rgb => rgb.join(',');
+    const mix = (rgb, t, a) => rgb.map((c, i) => clamp(c + (t[i] - c) * a));
+    const lighten = (rgb, a) => mix(rgb, [255, 255, 255], a);
+    const darken = (rgb, a) => mix(rgb, [0, 0, 0], a);
+    const toCss = rgb => `rgb(${rgbStr(rgb)})`;
+    function lum(rgb) { const c = rgb.map(v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }); return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; }
+
+    function applyColors(bgHex, fxHex) {
+      const rs = document.documentElement.style;
+      if (bgHex) {
+        const bg = hexToRgb(bgHex), dark = lum(bg) < .5;
+        rs.setProperty('--bg', bgHex);
+        rs.setProperty('--bg-2', toCss(dark ? lighten(bg, .06) : darken(bg, .03)));
+        rs.setProperty('--ink', dark ? '#f3eae0' : '#3a2e23');
+        rs.setProperty('--muted', dark ? '#b4a591' : '#8f7f6b');
+        rs.setProperty('--card', dark ? 'rgba(255,250,242,.05)' : 'rgba(80,56,30,.035)');
+        rs.setProperty('--card-bd', dark ? 'rgba(255,244,230,.12)' : 'rgba(90,62,34,.14)');
+        rs.setProperty('--hair', dark ? 'rgba(220,214,204,.10)' : 'rgba(255,255,255,.7)');
+      }
+      if (fxHex) {
+        const fx = hexToRgb(fxHex);
+        rs.setProperty('--rose', fxHex);
+        rs.setProperty('--accent-rgb', rgbStr(fx));
+        rs.setProperty('--glow-rgb', rgbStr(lighten(fx, .28)));
+        rs.setProperty('--deep-rgb', rgbStr(darken(fx, .45)));
+        rs.setProperty('--grad', `linear-gradient(120deg,${toCss(lighten(fx, .24))} 0%,${fxHex} 55%,${toCss(darken(fx, .14))} 100%)`);
+      }
+    }
+
+    let cfg = {};
+    try { cfg = JSON.parse(localStorage.getItem('kl-admin') || '{}'); } catch (e) {}
+    let curBg = cfg.bg || null, curFx = cfg.fx || null;
+    if (curBg || curFx) applyColors(curBg, curFx);
+
+    const BG_PRESETS = ['#fdfbf7', '#ffffff', '#f6f0e6', '#f1ebe1', '#eef1f4', '#f4eef0', '#eaf0ec', '#211a14', '#181210', '#13100d'];
+    const FX_PRESETS = ['#b08658', '#c2997a', '#a9764a', '#caa07a', '#9c7650', '#8a9a7b', '#7d8aa6', '#b07f8f', '#6f7f8c', '#9a7b52'];
+    const bgCustom = $('#bgCustom'), fxCustom = $('#fxCustom');
+
+    function buildSwatches(host, presets, current, onPick) {
+      host.innerHTML = '';
+      presets.forEach(c => {
+        const s = document.createElement('button');
+        s.type = 'button'; s.className = 'swatch' + (c.toLowerCase() === (current || '').toLowerCase() ? ' sel' : '');
+        s.style.background = c; s.title = c;
+        s.addEventListener('click', () => { [...host.children].forEach(x => x.classList.remove('sel')); s.classList.add('sel'); onPick(c); });
+        host.appendChild(s);
+      });
+    }
+    function refreshSwatches() {
+      buildSwatches($('#bgSwatches'), BG_PRESETS, curBg, c => { curBg = c; bgCustom.value = c; applyColors(c, null); });
+      buildSwatches($('#fxSwatches'), FX_PRESETS, curFx, c => { curFx = c; fxCustom.value = c; applyColors(null, c); });
+    }
+    bgCustom.addEventListener('input', e => { curBg = e.target.value; applyColors(curBg, null); [...$('#bgSwatches').children].forEach(x => x.classList.remove('sel')); });
+    fxCustom.addEventListener('input', e => { curFx = e.target.value; applyColors(null, curFx); [...$('#fxSwatches').children].forEach(x => x.classList.remove('sel')); });
+
+    const authed = () => sessionStorage.getItem('kl-admin-auth') === '1';
+    function openAdmin() { panel.hidden = false; authed() ? showPanel() : showLogin(); }
+    function closeAdmin() { panel.hidden = true; if (location.hash === '#admin') history.replaceState(null, '', location.pathname + location.search); }
+    function showLogin() { loginView.hidden = false; ctrlView.hidden = true; }
+    function showPanel() {
+      loginView.hidden = true; ctrlView.hidden = false;
+      if (curFx) fxCustom.value = curFx; if (curBg) bgCustom.value = curBg;
+      refreshSwatches();
+    }
+
+    $('#adminOpen').addEventListener('click', e => { e.preventDefault(); openAdmin(); });
+    addEventListener('hashchange', () => { if (location.hash === '#admin') openAdmin(); });
+    if (location.hash === '#admin') openAdmin();
+
+    $('#adminClose').addEventListener('click', closeAdmin);
+    panel.addEventListener('click', e => { if (e.target === panel) closeAdmin(); });
+
+    $('#adminEnter').addEventListener('click', () => {
+      if ($('#adminUser').value.trim() === USER && $('#adminPass').value === PASS) {
+        sessionStorage.setItem('kl-admin-auth', '1'); $('#adminErr').hidden = true; showPanel();
+      } else { $('#adminErr').hidden = false; }
+    });
+    $('#adminPass').addEventListener('keydown', e => { if (e.key === 'Enter') $('#adminEnter').click(); });
+    $('#adminLogout').addEventListener('click', () => { sessionStorage.removeItem('kl-admin-auth'); showLogin(); });
+
+    $('#adminSave').addEventListener('click', () => {
+      cfg = {}; if (curBg) cfg.bg = curBg; if (curFx) cfg.fx = curFx;
+      try { localStorage.setItem('kl-admin', JSON.stringify(cfg)); } catch (e) {}
+      const note = $('#adminNote'), prev = note.textContent;
+      note.textContent = '✓ Alterações salvas neste dispositivo!';
+      setTimeout(() => { note.textContent = prev; }, 2400);
+    });
+    $('#adminReset').addEventListener('click', () => {
+      curBg = null; curFx = null;
+      try { localStorage.removeItem('kl-admin'); } catch (e) {}
+      ['--bg','--bg-2','--ink','--muted','--card','--card-bd','--hair','--rose','--accent-rgb','--glow-rgb','--deep-rgb','--grad']
+        .forEach(v => document.documentElement.style.removeProperty(v));
+      bgCustom.value = '#fdfbf7'; fxCustom.value = '#b08658';
+      refreshSwatches();
+    });
+  })();
 })();
