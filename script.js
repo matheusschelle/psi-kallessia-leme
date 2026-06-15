@@ -39,8 +39,8 @@
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', t === 'light' ? '#f4f0fb' : '#0b0613');
   }
-  let theme = 'dark';
-  try { theme = localStorage.getItem('kl-theme') || 'dark'; } catch (e) {}
+  let theme = 'light';
+  try { theme = localStorage.getItem('kl-theme') || 'light'; } catch (e) {}
   applyTheme(theme);
   themeBtn && themeBtn.addEventListener('click', () => {
     theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
