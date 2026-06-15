@@ -3,3 +3,6 @@ node_modules/
 .vercel
 *.log
 Thumbs.db
+
+# Local Netlify folder
+.netlify
