@@ -56,6 +56,22 @@ h1,h2,h3,h4{line-height:1.08;font-weight:600}
 }
 .scroll-progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:60;background:var(--grad);box-shadow:0 0 14px #d6409f}
 
+/* ============ MARCA D'ÁGUA (demo lacrada) ============ */
+.wm-logos{
+  position:fixed;inset:0;z-index:2;pointer-events:none;
+  opacity:.05;
+  background:url("assets/img/kairos-logo.png") repeat;
+  background-size:150px;
+  mix-blend-mode:screen;
+}
+.wm-text{
+  position:fixed;top:-60%;left:-30%;width:170%;height:230%;
+  z-index:2;pointer-events:none;opacity:.07;
+  transform:rotate(-24deg);
+  background-repeat:repeat;
+  background-image:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='660'%20height='86'%3E%3Ctext%20x='6'%20y='54'%20font-family='Arial,Helvetica,sans-serif'%20font-size='22'%20font-weight='800'%20letter-spacing='7'%20fill='%23ffffff'%3EKAIROS%20DIGITAL%20%C2%B7%20DEMO%20%C2%B7%20SITE%20LACRADO%20%C2%B7%3C/text%3E%3C/svg%3E");
+}
+
 /* keep content above spotlight */
 .nav,.hero,.section,.footer,.kairos-mark,.wa-float{position:relative;z-index:3}
 .section--dark .quiz,.hero__inner{z-index:4}
